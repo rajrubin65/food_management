@@ -1,7 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean,ForeignKey
+from datetime import datetime
+
 
 db_url = 'sqlite:///database.db'
 
@@ -24,10 +26,11 @@ class Users(Base):
 class FoodDetails(Base):
     __tablename__ =  'food_details'
     fd_id = Column("fd_id",Integer,primary_key=True,nullable=False)
-    datetime = Column("datetime",Integer)
+    datetime = Column("datetime",Integer,unique=True)
     morning = Column("morning",Integer)
     noon = Column("noon",Integer)
     night = Column("night",Integer)
+    user_id = Column("user_id",Integer,ForeignKey(Users.user_id))
 
 
 Base.metadata.create_all(engine)
@@ -64,9 +67,37 @@ class UserOper:
 
 # Food details
 
-class FoodDetails:
+class FoodDetailsOpr:
     def __init__(self):
         self.db_session = Session()
     
-    def add_food_details():
-        return{'message':'success'}
+    def add_food_details(self,food_detail):
+        try:
+            new_food_obj = FoodDetails(
+                datetime = food_detail['datetime'],
+                morning = food_detail['morning'],
+                noon = food_detail['noon'],
+                night = food_detail['night'],
+                user_id = food_detail['user_id']
+            )
+            self.db_session.add(new_food_obj)
+            self.db_session.commit()
+            return {'message':'success'}
+        except Exception as e:
+            print('Error ===>',e)
+
+    def update_food_details(self,food_details):
+        try:
+            self.db_session.query(FoodDetails).filter(
+                FoodDetails.datetime==food_details['datetime'] and FoodDetails.user_id == food_details['user_id']
+                ).update(
+                {
+                    FoodDetails.morning : food_details['morning'],
+                    FoodDetails.noon : food_details['noon'],
+                    FoodDetails.night : food_details['night']
+                }
+                )
+            self.db_session.commit()
+            return {'message':'success'}
+        except Exception as e:
+            print(e)
