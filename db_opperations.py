@@ -146,6 +146,9 @@ class FoodDetailsOpr:
             )
         return data_set
 
+    def delete_all_foods(self):
+        self.db_session.query(FoodDetails).delete()
+        return {'message':'success'}
 
 class FoodPriceOpr:
     def __init__(self):

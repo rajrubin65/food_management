@@ -41,9 +41,22 @@ if submit:
 if show_details:
     data_set = food_oper.get_all_food_details()
     data_frame = st.dataframe(data=data_set)
+    df = pd.DataFrame(data=data_set)
+    total_sum = df['amount'].sum()
+    df['Total Amount'] = total_sum
+    csv = df.to_csv(index=False).encode('utf-8')
+    st.download_button(
+    "Press to Download",
+    csv,
+    "file.csv",
+    "text/csv",
+    key='download-csv'
+    )
 
 if get_amount:
     data_set = food_oper.get_all_food_details()
     df = pd.DataFrame(data=data_set)
     total_sum = df['amount'].sum()
     st.subheader(f'Total Amount: {total_sum}')
+
+
