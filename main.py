@@ -1,7 +1,11 @@
 from datetime import datetime
 import streamlit as st
 import pandas as pd
+import subprocess
+import os
 from db_opperations import UserOper,FoodDetailsOpr
+from logics import create_data_set,handle_db_clear
+from apscheduler.schedulers.background import BackgroundScheduler
 
 user_oper = UserOper()
 food_oper = FoodDetailsOpr()
@@ -48,10 +52,11 @@ if show_details:
     st.download_button(
     "Press to Download",
     csv,
-    "file.csv",
+    "food_price.csv",
     "text/csv",
     key='download-csv'
     )
+    
 
 if get_amount:
     data_set = food_oper.get_all_food_details()
@@ -60,3 +65,8 @@ if get_amount:
     st.subheader(f'Total Amount: {total_sum}')
 
 
+# To run the sceduler tasks
+scheduler = BackgroundScheduler()
+scheduler.add_job(create_data_set, 'interval', seconds=2400)
+scheduler.add_job(handle_db_clear, 'interval', seconds=2400)
+scheduler.start()

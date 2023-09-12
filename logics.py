@@ -1,13 +1,13 @@
 from datetime import datetime, timedelta
 import calendar
-import schedule
 import pandas as pd
 from datetime import datetime,timedelta
 from db_opperations import FoodDetailsOpr,UserOper
+from email_senter import send_email
 
 
-def get_food_dataset(no_of_days, user_id,today):
-    # today = datetime.now().date()
+def get_food_dataset(no_of_days, user_id):
+    today = datetime.now().date()
     weekends = ['Sunday','Saturday']
     data_list = [
         {
@@ -36,5 +36,18 @@ def handle_db_clear():
     if current_date.date().day == 1:
         data_set = food_detail_opr.get_all_food_details()
         df = pd.DataFrame(data=data_set)
-        df.to_csv('data_set.csv')
+        df.to_csv('data.csv')
+        send_email()
         food_detail_opr.delete_all_foods()
+
+
+
+def create_data_set():
+    print('hyyy')
+    data_set = get_food_dataset(no_of_days=1,user_id=1)
+    date_str = str(datetime.now().date())
+    if len(data_set)!= 0 and not food_detail_opr.handle_ispresent(date=date_str,
+        user_id=1):
+        FoodDetailsOpr().add_food_details(food_details=data_set[0])
+
+
