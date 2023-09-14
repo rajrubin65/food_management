@@ -148,6 +148,7 @@ class FoodDetailsOpr:
 
     def delete_all_foods(self):
         self.db_session.query(FoodDetails).delete()
+        self.db_session.commit()
         return {'message':'success'}
 
 class FoodPriceOpr:
@@ -156,3 +157,18 @@ class FoodPriceOpr:
     
     def get_price_based_on():
         pass
+
+
+
+# import pandas as pd
+
+# df = pd.read_csv(r'C:\Users\rubin\Downloads\food_price.csv')
+# food_opr = FoodDetailsOpr()
+# for ind in range(df.shape[0]):
+#     data = df.loc[ind].to_dict()
+#     del data['fd_id']
+#     data['morning'] = True
+#     data['noon'] = True
+#     data['night'] = True
+#     data['user_id'] = 1
+#     food_opr.add_food_details(food_details=data)
