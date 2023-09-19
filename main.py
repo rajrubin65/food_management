@@ -1,8 +1,6 @@
 from datetime import datetime
 import streamlit as st
 import pandas as pd
-import subprocess
-import os
 from db_opperations import UserOper,FoodDetailsOpr
 from logics import create_data_set,handle_db_clear
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -67,6 +65,10 @@ if get_amount:
 
 # To run the sceduler tasks
 scheduler = BackgroundScheduler()
-scheduler.add_job(create_data_set, 'interval', seconds=2400)
-scheduler.add_job(handle_db_clear, 'interval', seconds=2400)
+# scheduler.add_job(create_data_set, 'interval', seconds=2400)
+# scheduler.add_job(handle_db_clear, 'interval', seconds=2400)
+
+
+scheduler.add_job(create_data_set, 'cron', day_of_week='mon-fri', hour=18, minute=30)
+scheduler.add_job(handle_db_clear, 'cron', day='last')
 scheduler.start()
