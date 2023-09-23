@@ -25,19 +25,19 @@ if submit:
     # get user id
     date_str = str(datetime.now().date())
     user_id = selected_option.split('-')[0]
+    food_details={
+    'datetime': date_str,
+    'morning':morng,
+    'noon': noon,
+    'night': night,
+    "user_id": user_id 
+    }
     if not food_oper.handle_ispresent(user_id=user_id,date=date_str):
-        food_oper.add_food_details(
-            food_details={
-                'datetime': date_str,
-                'morning':morng,
-                'noon': noon,
-                'night': night,
-                "user_id": user_id 
-            }
-        )
+        food_oper.add_food_details(food_details=food_details)
         st.info('Submited Sucessfully...!!')
     else:
-        st.info("Allready Submitted")
+        food_oper.update_food_details(food_details=food_details)
+        st.info("Updated Successfully")
 
 
 if show_details:
