@@ -43,7 +43,6 @@ def handle_db_clear():
 
 
 def create_data_set():
-    print('hyyy')
     data_set = get_food_dataset(no_of_days=1,user_id=1)
     date_str = str(datetime.now().date())
     if len(data_set)!= 0 and not food_detail_opr.handle_ispresent(date=date_str,
