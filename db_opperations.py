@@ -107,13 +107,18 @@ class FoodDetailsOpr:
 
     def update_food_details(self,food_details):
         try:
+            amount = 0
+            if food_details['morning'] : amount += 40
+            if food_details['noon'] : amount += 50
+            if food_details['night'] : amount += 40
             self.db_session.query(FoodDetails).filter(
                 FoodDetails.datetime==food_details['datetime'] and FoodDetails.user_id == food_details['user_id']
                 ).update(
                 {
                     FoodDetails.morning : food_details['morning'],
                     FoodDetails.noon : food_details['noon'],
-                    FoodDetails.night : food_details['night']
+                    FoodDetails.night : food_details['night'],
+                    FoodDetails.amount:amount
                 }
                 )
             self.db_session.commit()
