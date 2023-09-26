@@ -2,6 +2,7 @@ from datetime import datetime
 import streamlit as st
 import pandas as pd
 from db_opperations import UserOper,FoodDetailsOpr
+from email_senter import send_email
 from logics import create_data_set,handle_db_clear
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -47,13 +48,16 @@ if show_details:
     total_sum = df['amount'].sum()
     df['Total Amount'] = total_sum
     csv = df.to_csv(index=False).encode('utf-8')
-    st.download_button(
+    download = st.download_button(
     "Press to Download",
     csv,
     "food_price.csv",
     "text/csv",
     key='download-csv'
     )
+    if download:
+         df.to_csv('data.csv')
+         send_email()
     
 
 if get_amount:
@@ -65,10 +69,10 @@ if get_amount:
 
 # To run the sceduler tasks
 scheduler = BackgroundScheduler()
-# scheduler.add_job(create_data_set, 'interval', seconds=2400)
-# scheduler.add_job(handle_db_clear, 'interval', seconds=2400)
+scheduler.add_job(create_data_set, 'interval', seconds=21600)
+scheduler.add_job(handle_db_clear, 'interval', seconds=21600)
 
 
-scheduler.add_job(create_data_set, 'cron', day_of_week='mon-fri', hour=18, minute=30)
-scheduler.add_job(handle_db_clear, 'cron', day='last')
+# scheduler.add_job(create_data_set, 'cron', day_of_week='mon-fri', hour=18, minute=30)
+# scheduler.add_job(handle_db_clear, 'cron', day='last')
 scheduler.start()
