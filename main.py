@@ -70,7 +70,7 @@ if get_amount:
 # To run the sceduler tasks
 scheduler = BackgroundScheduler()
 scheduler.add_job(create_data_set, 'interval', seconds=21600)
-scheduler.add_job(handle_db_clear, 'interval', seconds=21600)
+# scheduler.add_job(handle_db_clear, 'interval', seconds=21600)
 
 
 # scheduler.add_job(create_data_set, 'cron', day_of_week='mon-fri', hour=18, minute=30)
